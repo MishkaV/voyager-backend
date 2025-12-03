@@ -7,6 +7,7 @@ from typing import Dict, List
 import requests
 
 from base_generator import BaseGenerator
+from utils.palette.color_extractor import ColorExtractor
 from utils.settings.voyager_settings import VoyagerSeedSettings
 from utils.storage.supabase_storage import SupabaseStorageClient
 
@@ -87,8 +88,6 @@ class RestCountryResponse:
 
         primary_currency = curr_obj.name or primary_currency_code
 
-        flag_url = self.flags.png or self.flags.svg
-
         return CountryData(
             iso2=iso2,
             name=self.name.common,
@@ -98,7 +97,8 @@ class RestCountryResponse:
             primary_language_code=primary_language_code,
             primary_currency=primary_currency,
             primary_currency_code=primary_currency_code,
-            flag_url=flag_url,
+            flag_full_path="",  # Will be set after upload
+            background_hex="#CC000000",  # Will be set after palette extraction
         )
 
 
@@ -114,7 +114,8 @@ class CountryData:
     primary_language_code: str
     primary_currency: str
     primary_currency_code: str
-    flag_url: str
+    flag_full_path: str  # Full path in format "bucket/path" after upload
+    background_hex: str  # ARGB hex color with 80% alpha
 
 
 class CountriesGenerator(BaseGenerator):
@@ -135,6 +136,7 @@ class CountriesGenerator(BaseGenerator):
         """Initialize the countries generator."""
         super().__init__(settings)
         self.storage_client: SupabaseStorageClient = SupabaseStorageClient(self.settings)
+        self.color_extractor: ColorExtractor = ColorExtractor()
         print(
             f"[countries] Storage client initialized, will upload flags to {self.settings.supabase_bucket_name_flags}"
         )
@@ -192,7 +194,7 @@ class CountriesGenerator(BaseGenerator):
         return countries
 
     def _upload_flag_to_storage(self, flag_url: str, iso2: str, bucket: str) -> str:
-        """Upload country flag to Supabase Storage.
+        """Upload country flag to Supabase Storage (only if not exists).
 
         Args:
             flag_url: Original flag URL from RestCountries API.
@@ -200,7 +202,7 @@ class CountriesGenerator(BaseGenerator):
             bucket: Storage bucket name.
 
         Returns:
-            Public URL of the uploaded flag.
+            Full path in format "{bucket}/{storage_path}" (e.g., "flags/US.png").
 
         Raises:
             ValueError: If flag URL is empty or upload fails.
@@ -209,7 +211,7 @@ class CountriesGenerator(BaseGenerator):
             raise ValueError(f"Flag URL cannot be empty for country {iso2}")
 
         storage_path = f"{iso2}.png"
-        return self.storage_client.upload_from_url(flag_url, bucket, storage_path)
+        return self.storage_client.get_or_upload_from_url(flag_url, bucket, storage_path)
 
     def generate(self, output_path: Path) -> None:
         """Generate countries seed SQL file.
@@ -225,7 +227,6 @@ class CountriesGenerator(BaseGenerator):
 
         rows: List[str] = []
         uploaded_count = 0
-        fallback_count = 0
 
         print(f"[countries] Processing {len(rest_countries)} countries...")
 
@@ -237,17 +238,41 @@ class CountriesGenerator(BaseGenerator):
             # Convert to CountryData (validates and extracts required fields)
             country = rest_country.to_country_data()
 
-            # Upload flag to storage, fallback to original URL on error
-            original_flag_url = country.flag_url
+            # Get original flag URL from API response
+            original_flag_url = rest_country.flags.png or rest_country.flags.svg
+
+            # Upload flag to storage
             try:
-                flag_url = self._upload_flag_to_storage(country.flag_url, country.iso2, bucket)
+                flag_full_path = self._upload_flag_to_storage(original_flag_url, country.iso2, bucket)
+                if not flag_full_path:
+                    raise ValueError(f"Flag full path cannot be empty for country {country.iso2}")
+                country.flag_full_path = flag_full_path
                 uploaded_count += 1
             except Exception as e:
-                # If upload fails (e.g., 403 Forbidden), use original URL as fallback
-                print(f"[countries] Warning: Failed to upload flag for {country.iso2} ({country.name}): {e}")
-                print(f"[countries] Using original URL as fallback: {original_flag_url}")
-                flag_url = original_flag_url
-                fallback_count += 1
+                # If upload fails, raise error (no fallback since flag_full_path is required)
+                raise Exception(
+                    f"Failed to upload flag for {country.iso2} ({country.name}): {e}. "
+                    f"Flag full path is required and cannot be empty."
+                )
+
+            # Extract color palette from flag image
+            try:
+                # Get signed URL for palette extraction (more reliable than public URL)
+                signed_url = self.storage_client.get_signed_url(bucket, f"{country.iso2}.png")
+                
+                # Extract palette and get muted color with 80% alpha
+                palette = self.color_extractor.extract_palette_from_url(signed_url)
+                background_hex = self.color_extractor.get_muted_color_with_alpha(palette, alpha_percent=80)
+                if not background_hex:
+                    raise ValueError("Background hex cannot be empty")
+                country.background_hex = background_hex
+                print(f"[countries] Extracted palette for {country.iso2}: {background_hex}")
+            except Exception as e:
+                # If palette extraction fails, raise error (background_hex is required)
+                raise Exception(
+                    f"Failed to extract palette for {country.iso2} ({country.name}): {e}. "
+                    f"Background hex is required and cannot be empty."
+                )
 
             row = (
                 "  ("
@@ -261,7 +286,8 @@ class CountriesGenerator(BaseGenerator):
                         self.format_sql_value(country.primary_language_code),
                         self.format_sql_value(country.primary_currency),
                         self.format_sql_value(country.primary_currency_code),
-                        self.format_sql_value(flag_url),
+                        self.format_sql_value(country.flag_full_path),
+                        self.format_sql_value(country.background_hex),
                     ]
                 )
                 + ")"
@@ -282,7 +308,8 @@ class CountriesGenerator(BaseGenerator):
                 "primary_language_code",
                 "primary_currency",
                 "primary_currency_code",
-                "flag_url",
+                "flag_full_patch",
+                "background_hex",
             ],
             rows=rows,
             conflict_key="iso2",
@@ -292,5 +319,3 @@ class CountriesGenerator(BaseGenerator):
         print(f"[countries] Statistics:")
         print(f"[countries]   - Total countries processed: {len(rows)}")
         print(f"[countries]   - Flags uploaded to Storage: {uploaded_count}")
-        if fallback_count > 0:
-            print(f"[countries]   - Flags using original URL (fallback): {fallback_count}")
