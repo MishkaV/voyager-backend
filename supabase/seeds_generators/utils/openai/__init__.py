@@ -15,6 +15,10 @@ from utils.openai.country_overview_assignment import (
     CountryOverviewAssignment,
     CountryOverviewAssignmentClient,
 )
+from utils.openai.podcast_script_assignment import (
+    PodcastScriptAssignment,
+    PodcastScriptAssignmentClient,
+)
 from utils.openai.vibe_country_assignment import (
     VibeCountryAssignment,
     VibeCountryAssignmentClient,
@@ -30,6 +34,8 @@ __all__ = [
     "CountryOverviewAssignmentClient",
     "CountrySpecificAISuggestAssignmentClient",
     "GeneralAISuggestAssignmentClient",
+    "PodcastScriptAssignment",
+    "PodcastScriptAssignmentClient",
     "VibeCountryAssignment",
     "VibeCountryAssignmentClient",
 ]

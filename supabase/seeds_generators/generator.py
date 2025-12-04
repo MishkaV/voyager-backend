@@ -19,6 +19,7 @@ from generators.llm.country_best_time_generator import CountryBestTimeGenerator
 from generators.llm.country_overview_generator import CountryOverviewGenerator
 from generators.llm.country_specific_ai_suggest_generator import CountrySpecificAISuggestGenerator
 from generators.llm.general_ai_suggest_generator import GeneralAISuggestGenerator
+from generators.llm.podcast_script_generator import PodcastScriptGenerator
 from generators.manual.countries_generator import CountriesGenerator
 from utils.settings.voyager_settings import VoyagerSeedSettings
 
@@ -33,13 +34,14 @@ def main():
 
     generators = [
         # Base manual
-        CountriesGenerator(settings),
+        # CountriesGenerator(settings),
         # LLM-based (writes directly to database)
-        VibesCountryGenerator(settings),
-        CountryBestTimeGenerator(settings),
-        CountryOverviewGenerator(settings),
-        GeneralAISuggestGenerator(settings),
-        CountrySpecificAISuggestGenerator(settings),
+        # VibesCountryGenerator(settings),
+        # CountryBestTimeGenerator(settings),
+        # CountryOverviewGenerator(settings),
+        # GeneralAISuggestGenerator(settings),
+        # CountrySpecificAISuggestGenerator(settings),
+        PodcastScriptGenerator(settings),
     ]
 
     print(f"[generator] Starting generation of {len(generators)} seed file(s)...")

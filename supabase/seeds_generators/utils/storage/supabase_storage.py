@@ -76,6 +76,8 @@ class SupabaseStorageClient:
             content_type = "image/jpeg"
         elif storage_path.endswith(".svg"):
             content_type = "image/svg+xml"
+        elif storage_path.endswith(".txt"):
+            content_type = "text/plain"
 
         print(f"[storage] Uploading to {bucket}/{storage_path}...")
         try:
@@ -125,6 +127,8 @@ class SupabaseStorageClient:
             content_type = "image/jpeg"
         elif suffix == ".svg":
             content_type = "image/svg+xml"
+        elif suffix == ".txt":
+            content_type = "text/plain"
 
         try:
             self.client.storage.from_(bucket).upload(

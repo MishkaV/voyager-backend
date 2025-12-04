@@ -6,6 +6,7 @@ from generators.llm.country_specific_ai_suggest_generator import (
     CountrySpecificAISuggestGenerator,
 )
 from generators.llm.general_ai_suggest_generator import GeneralAISuggestGenerator
+from generators.llm.podcast_script_generator import PodcastScriptGenerator
 from generators.llm.vibes_country_generator import VibesCountryGenerator
 
 __all__ = [
@@ -13,6 +14,7 @@ __all__ = [
     "CountryOverviewGenerator",
     "CountrySpecificAISuggestGenerator",
     "GeneralAISuggestGenerator",
+    "PodcastScriptGenerator",
     "VibesCountryGenerator",
 ]
 
