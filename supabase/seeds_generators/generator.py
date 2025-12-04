@@ -16,6 +16,7 @@ load_dotenv(env_path)
 
 from generators.llm.vibes_country_generator import VibesCountryGenerator
 from generators.llm.country_best_time_generator import CountryBestTimeGenerator
+from generators.llm.country_overview_generator import CountryOverviewGenerator
 from generators.manual.countries_generator import CountriesGenerator
 from utils.settings.voyager_settings import VoyagerSeedSettings
 
@@ -34,6 +35,7 @@ def main():
         # LLM-based (writes directly to database)
         VibesCountryGenerator(settings),
         CountryBestTimeGenerator(settings),
+        CountryOverviewGenerator(settings),
     ]
 
     print(f"[generator] Starting generation of {len(generators)} seed file(s)...")

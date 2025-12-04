@@ -31,3 +31,22 @@ class CountryOverviewRepository(BaseRepository[CountryOverview]):
             wikipedia_url=str(data["wikipedia_url"]),
         )
 
+    def _record_to_dict(self, record: CountryOverview) -> dict:
+        """Convert a CountryOverview instance to a dictionary for database operations.
+        
+        Excludes id if it's empty (database will generate it).
+
+        Args:
+            record: CountryOverview instance.
+
+        Returns:
+            Dictionary representation of the model.
+        """
+        from dataclasses import asdict
+        
+        data = asdict(record)
+        # Exclude id if it's empty (database will generate it)
+        if not data.get("id"):
+            data.pop("id", None)
+        return data
+
