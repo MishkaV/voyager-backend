@@ -19,14 +19,13 @@ class BaseGenerator(ABC):
         self.settings = settings
 
     @property
-    @abstractmethod
-    def filename(self) -> str:
+    def filename(self) -> str | None:
         """Return the output filename for this generator.
 
         Returns:
-            Filename (e.g., "03_countries.sql").
+            Filename (e.g., "03_countries.sql") or None if generator doesn't create SQL files.
         """
-        pass
+        return None
 
     @staticmethod
     def sql_escape(value: str) -> str:

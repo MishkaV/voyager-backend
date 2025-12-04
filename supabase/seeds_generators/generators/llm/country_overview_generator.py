@@ -20,8 +20,6 @@ from utils.settings.voyager_settings import VoyagerSeedSettings
 class CountryOverviewGenerator(BaseGenerator):
     """Generator for country_overview table using LLM."""
 
-    filename = "06_country_overview.sql"
-
     def __init__(self, settings: VoyagerSeedSettings):
         """Initialize the generator.
 

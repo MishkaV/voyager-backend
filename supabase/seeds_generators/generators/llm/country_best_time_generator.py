@@ -19,8 +19,6 @@ from utils.settings.voyager_settings import VoyagerSeedSettings
 class CountryBestTimeGenerator(BaseGenerator):
     """Generator for country_best_times table using LLM."""
 
-    filename = "05_country_best_times.sql"
-
     def __init__(self, settings: VoyagerSeedSettings):
         """Initialize the generator.
 

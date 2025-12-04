@@ -1,6 +1,12 @@
 """OpenAI clients and utilities."""
 
 from utils.openai.base_client import BaseOpenAIClient
+from utils.openai.country_ai_suggest_assignment import (
+    BaseCountryAISuggestAssignmentClient,
+    CountryAISuggestAssignment,
+    CountrySpecificAISuggestAssignmentClient,
+    GeneralAISuggestAssignmentClient,
+)
 from utils.openai.country_best_time_assignment import (
     CountryBestTimeAssignment,
     CountryBestTimeAssignmentClient,
@@ -16,10 +22,14 @@ from utils.openai.vibe_country_assignment import (
 
 __all__ = [
     "BaseOpenAIClient",
+    "BaseCountryAISuggestAssignmentClient",
+    "CountryAISuggestAssignment",
     "CountryBestTimeAssignment",
     "CountryBestTimeAssignmentClient",
     "CountryOverviewAssignment",
     "CountryOverviewAssignmentClient",
+    "CountrySpecificAISuggestAssignmentClient",
+    "GeneralAISuggestAssignmentClient",
     "VibeCountryAssignment",
     "VibeCountryAssignmentClient",
 ]

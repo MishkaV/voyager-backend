@@ -20,8 +20,6 @@ from utils.settings.voyager_settings import VoyagerSeedSettings
 class VibesCountryGenerator(BaseGenerator):
     """Generator for vibes_country table using LLM."""
 
-    filename = "04_vibes_country.sql"
-
     def __init__(self, settings: VoyagerSeedSettings):
         """Initialize the generator.
 

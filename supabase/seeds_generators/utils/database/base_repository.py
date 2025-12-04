@@ -161,9 +161,17 @@ class BaseRepository(ABC, Generic[T]):
             # Handle dataclass
             from dataclasses import asdict
 
-            return asdict(record)
+            data = asdict(record)
+            # Remove empty string IDs - database will generate UUID automatically
+            if "id" in data and data["id"] == "":
+                del data["id"]
+            return data
         elif hasattr(record, "__dict__"):
-            return {k: v for k, v in record.__dict__.items() if v is not None}
+            data = {k: v for k, v in record.__dict__.items() if v is not None}
+            # Remove empty string IDs - database will generate UUID automatically
+            if "id" in data and data["id"] == "":
+                del data["id"]
+            return data
         else:
             raise ValueError(f"Cannot convert {type(record)} to dict")
 
