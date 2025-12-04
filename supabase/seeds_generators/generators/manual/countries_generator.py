@@ -4,7 +4,7 @@ import dataclasses
 from pathlib import Path
 from typing import List
 
-from base_generator import BaseGenerator
+from seeds_generators.generators.base_generator import BaseGenerator
 from utils.palette.color_extractor import ColorExtractor
 from utils.restcountries.client import RestCountriesClient
 from utils.restcountries.models import RestCountryResponse

@@ -14,7 +14,7 @@ seeds_generators_dir = Path(__file__).resolve().parent
 env_path = seeds_generators_dir / '.env'
 load_dotenv(env_path)
 
-from countries_generator import CountriesGenerator
+from seeds_generators.generators.manual.countries_generator import CountriesGenerator
 from utils.settings.voyager_settings import VoyagerSeedSettings
 
 def main():
