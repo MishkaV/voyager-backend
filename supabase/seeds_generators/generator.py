@@ -14,7 +14,10 @@ seeds_generators_dir = Path(__file__).resolve().parent
 env_path = seeds_generators_dir / '.env'
 load_dotenv(env_path)
 
-from seeds_generators.generators.manual.countries_generator import CountriesGenerator
+from generators.llm.vibes_country_generator import (
+    VibesCountryGenerator,
+)
+from generators.manual.countries_generator import CountriesGenerator
 from utils.settings.voyager_settings import VoyagerSeedSettings
 
 def main():
@@ -27,8 +30,10 @@ def main():
     print(f"[generator] Output directory: {seeds_dir}")
 
     generators = [
-        CountriesGenerator(settings),
-        # Add more generators here as they are created
+        # Base manual
+        # CountriesGenerator(settings),
+        # LLM-based (writes directly to database)
+        VibesCountryGenerator(settings),
     ]
 
     print(f"[generator] Starting generation of {len(generators)} seed file(s)...")

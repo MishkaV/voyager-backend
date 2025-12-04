@@ -5,8 +5,8 @@ from typing import Dict, List
 
 import requests
 
-from models import Currency, Flags, Name, RestCountryResponse
-from seeds_generators.utils.settings.voyager_settings import VoyagerSeedSettings
+from utils.restcountries.models import Currency, Flags, Name, RestCountryResponse
+from utils.settings.voyager_settings import VoyagerSeedSettings
 
 
 def _filter_dataclass_fields(data: dict, dataclass_type: type) -> dict:

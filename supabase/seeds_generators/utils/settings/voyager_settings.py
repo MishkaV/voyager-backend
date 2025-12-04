@@ -38,3 +38,12 @@ class VoyagerSeedSettings(BaseSettings):
         "SEEDS_OUTPUT_DIR",
         "seeds",
     )
+
+    # OpenAI config
+    # OpenAI API key
+    openai_api_key: str = BaseSettings._str_from_environ("OPENAI_API_KEY")
+    # OpenAI model to use
+    openai_model: str = BaseSettings._str_from_environ(
+        "OPENAI_MODEL",
+        "gpt-5-mini",
+    )
