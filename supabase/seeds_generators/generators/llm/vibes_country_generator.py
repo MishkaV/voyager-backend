@@ -10,7 +10,7 @@ from utils.database.vibe_country_repository import (
     VibeCountryRepository,
 )
 from utils.database.vibe_repository import Vibe, VibeRepository
-from utils.openai.vibe_country_assignment import (
+from utils.ai.openai.vibe_country_assignment import (
     VibeCountryAssignment,
     VibeCountryAssignmentClient,
 )

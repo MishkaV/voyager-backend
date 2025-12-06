@@ -20,6 +20,7 @@ from generators.llm.country_overview_generator import CountryOverviewGenerator
 from generators.llm.country_specific_ai_suggest_generator import CountrySpecificAISuggestGenerator
 from generators.llm.general_ai_suggest_generator import GeneralAISuggestGenerator
 from generators.llm.podcast_script_generator import PodcastScriptGenerator
+from generators.llm.podcast_audio_generator import PodcastAudioGenerator
 from generators.manual.countries_generator import CountriesGenerator
 from utils.settings.voyager_settings import VoyagerSeedSettings
 
@@ -41,7 +42,8 @@ def main():
         # CountryOverviewGenerator(settings),
         # GeneralAISuggestGenerator(settings),
         # CountrySpecificAISuggestGenerator(settings),
-        PodcastScriptGenerator(settings),
+        # PodcastScriptGenerator(settings),
+        PodcastAudioGenerator(settings),
     ]
 
     print(f"[generator] Starting generation of {len(generators)} seed file(s)...")

@@ -6,7 +6,7 @@ from typing import Dict, List
 from generators.llm.base_ai_suggest_generator import BaseAISuggestGenerator
 from utils.database.country_ai_suggest_repository import CountryAISuggest
 from utils.database.country_repository import Country, CountryRepository
-from utils.openai.country_ai_suggest_assignment import (
+from utils.ai.openai.country_ai_suggest_assignment import (
     CountrySpecificAISuggestAssignmentClient,
 )
 from utils.settings.voyager_settings import VoyagerSeedSettings

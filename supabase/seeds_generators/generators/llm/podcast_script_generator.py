@@ -8,7 +8,7 @@ from typing import List, Tuple
 
 from generators.base_generator import BaseGenerator
 from utils.database.country_repository import Country, CountryRepository
-from utils.openai.podcast_script_assignment import (
+from utils.ai.openai.podcast_script_assignment import (
     PodcastScriptAssignment,
     PodcastScriptAssignmentClient,
 )

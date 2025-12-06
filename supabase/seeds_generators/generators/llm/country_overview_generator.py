@@ -9,7 +9,7 @@ from utils.database.country_overview_repository import (
     CountryOverviewRepository,
 )
 from utils.database.country_repository import Country, CountryRepository
-from utils.openai.country_overview_assignment import (
+from utils.ai.openai.country_overview_assignment import (
     CountryOverviewAssignment,
     CountryOverviewAssignmentClient,
 )

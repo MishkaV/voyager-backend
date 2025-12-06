@@ -47,3 +47,12 @@ class VoyagerSeedSettings(BaseSettings):
         "OPENAI_MODEL",
         "gpt-5-mini",
     )
+
+    # Gemini config
+    # Gemini API key
+    gemini_api_key: str = BaseSettings._str_from_environ("GEMINI_API_KEY")
+    # Gemini TTS model to use
+    gemini_tts_model: str = BaseSettings._str_from_environ(
+        "GEMINI_TTS_MODEL",
+        "gemini-2.5-flash-preview-tts ",
+    )

@@ -6,7 +6,7 @@ from typing import List
 
 from utils.database.country_repository import Country
 from utils.database.vibe_repository import Vibe
-from utils.openai.base_client import BaseOpenAIClient
+from utils.ai.openai.base_openai_client import BaseOpenAIClient
 from utils.settings.voyager_settings import VoyagerSeedSettings
 
 

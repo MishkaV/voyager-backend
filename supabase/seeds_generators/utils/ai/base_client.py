@@ -1,15 +1,13 @@
-"""Base OpenAI client with reusable methods."""
+"""Base Ai client with reusable methods."""
 
 import json
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List
 
-from openai import OpenAI
-
 from utils.settings.voyager_settings import VoyagerSeedSettings
 
 
-class BaseOpenAIClient(ABC):
+class BaseAIClient(ABC):
     """Base client for OpenAI API calls with reusable methods."""
 
     def __init__(self, settings: VoyagerSeedSettings):
@@ -19,8 +17,6 @@ class BaseOpenAIClient(ABC):
             settings: Voyager seed settings containing OpenAI configuration.
         """
         self.settings = settings
-        self.client = OpenAI(api_key=settings.openai_api_key)
-        print(f"[openai] Initialized OpenAI client with model: {settings.openai_model}")
 
     @property
     @abstractmethod
@@ -100,7 +96,7 @@ class BaseOpenAIClient(ABC):
         except Exception as e:
             if isinstance(e, RuntimeError):
                 raise
-            raise RuntimeError(f"OpenAI API error: {e}")
+            raise RuntimeError(f"AI API error: {e}")
 
     def _parse_json(self, content: str) -> Dict[str, Any] | List[Any]:
         """Parse JSON content from LLM response.

@@ -9,7 +9,7 @@ from utils.database.country_best_time_repository import (
     CountryBestTimeRepository,
 )
 from utils.database.country_repository import Country, CountryRepository
-from utils.openai.country_best_time_assignment import (
+from utils.ai.openai.country_best_time_assignment import (
     CountryBestTimeAssignment,
     CountryBestTimeAssignmentClient,
 )

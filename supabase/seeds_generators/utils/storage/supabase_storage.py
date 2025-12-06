@@ -45,6 +45,29 @@ class SupabaseStorageClient:
             # File doesn't exist or we don't have access
             return False
 
+    def download_file(self, bucket: str, storage_path: str) -> bytes:
+        """Download a file from Supabase Storage bucket.
+
+        Args:
+            bucket: Name of the storage bucket.
+            storage_path: Path to the file in the bucket.
+
+        Returns:
+            File content as bytes.
+
+        Raises:
+            FileNotFoundError: If the file does not exist.
+            Exception: If downloading fails.
+        """
+        try:
+            file_content = self.client.storage.from_(bucket).download(storage_path)
+            return file_content
+        except Exception as e:
+            error_str = str(e).lower()
+            if "not found" in error_str or "does not exist" in error_str:
+                raise FileNotFoundError(f"File not found in {bucket}/{storage_path}")
+            raise Exception(f"Failed to download {bucket}/{storage_path}: {e}")
+
     def upload_from_url(
         self, url: str, bucket: str, storage_path: str, timeout: int = 30
     ) -> str:
@@ -78,6 +101,8 @@ class SupabaseStorageClient:
             content_type = "image/svg+xml"
         elif storage_path.endswith(".txt"):
             content_type = "text/plain"
+        elif storage_path.endswith(".wav"):
+            content_type = "audio/wav"
 
         print(f"[storage] Uploading to {bucket}/{storage_path}...")
         try:
@@ -129,6 +154,8 @@ class SupabaseStorageClient:
             content_type = "image/svg+xml"
         elif suffix == ".txt":
             content_type = "text/plain"
+        elif suffix == ".wav":
+            content_type = "audio/wav"
 
         try:
             self.client.storage.from_(bucket).upload(
